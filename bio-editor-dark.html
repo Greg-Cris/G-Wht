@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>G-Wht bio - Editor Profissional</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #000000;
+            --bg-secondary: #0a0a0a;
+            --accent-color: #00f3ff;
+            --accent-button: #00f3ff;
+            --text-primary: #ffffff;
+            --text-secondary: #bbbbbb;
+            --border-color: rgba(0, 243, 255, 0.2);
+            --editor-bg: #050505;
+            --input-bg: #0a0a0a;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* ANIMATED BACKGROUND GRID */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+            opacity: 0.5;
+            z-index: 0;
+            pointer-events: none;
+            transition: background-image 0.5s ease;
+        }
+
+        /* GLOWING PARTICLES */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 30%, var(--accent-color) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, var(--accent-color) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, var(--accent-color) 0%, transparent 50%);
+            animation: particlesFloat 15s ease-in-out infinite;
+            opacity: 0.15;
+            z-index: 0;
+            pointer-events: none;
+            transition: background-image 0.5s ease;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translateY(0) translateX(0); }
+            100% { transform: translateY(50px) translateX(50px); }
+        }
+
+        @keyframes particlesFloat {
+            0%, 100% { opacity: 0.3; transform: scale(1) rotate(0deg); }
+            50% { opacity: 0.5; transform: scale(1.2) rotate(180deg); }
+        }
+
+        /* FLASHES DE LUZ DINÂMICOS */
+        .light-flash {
+            position: fixed;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--accent-color), transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+            filter: blur(40px);
+            animation: flash 4s ease-in-out infinite;
+            transition: background 0.5s ease;
+        }
+
+        .light-flash:nth-child(1) {
+            top: 10%;
+            left: 5%;
+            animation-delay: 0s;
+        }
+
+        .light-flash:nth-child(2) {
+            top: 70%;
+            right: 10%;
+            animation-delay: 1.5s;
+            width: 250px;
+            height: 250px;
+        }
+
+        .light-flash:nth-child(3) {
+            bottom: 20%;
+            left: 30%;
+            animation-delay: 3s;
+            width: 180px;
+            height: 180px;
+        }
+
+        @keyframes flash {
+            0%, 100% { opacity: 0; transform: scale(0.8); }
+            50% { opacity: 0.3; transform: scale(1.2); }
+        }
+
+        /* FLOATING GEOMETRIC SHAPES */
+        .floating-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .shape {
+            position: absolute;
+            border: 2px solid var(--accent-color);
+            opacity: 0.12;
+            animation: float 20s infinite ease-in-out;
+            transition: border-color 0.5s ease, box-shadow 0.5s ease;
+        }
+
+        .shape.circle {
+            border-radius: 50%;
+            box-shadow: 0 0 30px var(--accent-color);
+        }
+
+        .shape.square {
+            transform: rotate(45deg);
+            box-shadow: 0 0 30px var(--accent-color);
+        }
+
+        .shape.triangle {
+            width: 0;
+            height: 0;
+            border-left: 40px solid transparent;
+            border-right: 40px solid transparent;
+            border-bottom: 70px solid var(--accent-color);
+            opacity: 0.08;
+            background: none;
+            border-top: none;
+            transition: border-bottom-color 0.5s ease;
+        }
+
+        /* PARTÍCULAS PEQUENAS EXTRAS */
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            opacity: 0.6;
+            box-shadow: 0 0 10px var(--accent-color);
+            animation: particleFloat 8s infinite ease-in-out;
+            transition: background 0.5s ease, box-shadow 0.5s ease;
+        }
+
+        .particle:nth-child(6) { top: 15%; left: 25%; animation-delay: 0s; }
+        .particle:nth-child(7) { top: 45%; left: 75%; animation-delay: 1s; }
+        .particle:nth-child(8) { top: 65%; left: 15%; animation-delay: 2s; }
+        .particle:nth-child(9) { top: 85%; left: 85%; animation-delay: 3s; }
+        .particle:nth-child(10) { top: 25%; left: 65%; animation-delay: 1.5s; }
+        .particle:nth-child(11) { top: 55%; left: 35%; animation-delay: 2.5s; }
+
+        @keyframes particleFloat {
+            0%, 100% { transform: translateY(0) translateX(0); opacity: 0.3; }
+            25% { transform: translateY(-20px) translateX(20px); opacity: 0.8; }
+            50% { transform: translateY(-40px) translateX(-10px); opacity: 0.5; }
+            75% { transform: translateY(-20px) translateX(-30px); opacity: 0.7; }
+        }
+
+        .shape:nth-child(1) { width: 80px; height: 80px; top: 10%; left: 10%; animation-delay: 0s; animation-duration: 25s; }
+        .shape:nth-child(2) { width: 120px; height: 120px; top: 60%; left: 80%; animation-delay: -5s; animation-duration: 30s; }
+        .shape:nth-child(3) { width: 60px; height: 60px; top: 80%; left: 15%; animation-delay: -10s; animation-duration: 20s; }
+        .shape:nth-child(4) { top: 30%; left: 85%; animation-delay: -15s; animation-duration: 28s; }
+        .shape:nth-child(5) { width: 100px; height: 100px; top: 50%; left: 50%; animation-delay: -8s; animation-duration: 35s; }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(50px, -50px) rotate(90deg); }
+            50% { transform: translate(-30px, -100px) rotate(180deg); }
+            75% { transform: translate(-50px, 30px) rotate(270deg); }
+        }
+
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* EDITOR PANEL */
+        .editor-panel {
+            width: 420px;
+            background: var(--editor-bg);
+            border-right: 2px solid var(--border-color);
+            overflow-y: auto;
+            padding: 30px 25px;
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.5);
+            position: relative;
+            z-index: 10;
+        }
+
+        .editor-panel::before,
+        .editor-panel::after {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border: 3px solid var(--accent-color);
+            z-index: 1;
+            animation: cornerPulse 3s ease-in-out infinite;
+        }
+
+        .editor-panel::before {
+            top: 20px;
+            left: 20px;
+            border-right: none;
+            border-bottom: none;
+            box-shadow: -2px -2px 10px rgba(74, 158, 255, 0.5);
+        }
+
+        .editor-panel::after {
+            bottom: 20px;
+            right: 20px;
+            border-left: none;
+            border-top: none;
+            box-shadow: 2px 2px 10px rgba(74, 158, 255, 0.5);
+        }
+
+        @keyframes cornerPulse {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.1); }
+        }
+
+        .editor-header {
+            margin-bottom: 35px;
+        }
+
+        .editor-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent-color), #888888);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+
+        .editor-subtitle {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .section {
+            margin-bottom: 35px;
+        }
+
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--accent-color), transparent);
+            position: absolute;
+            left: -15px;
+            border-radius: 2px;
+        }
+
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, var(--accent-color), transparent);
+            margin-left: 10px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input[type="text"],
+        input[type="url"],
+        input[type="file"],
+        textarea {
+            width: 100%;
+            background: var(--input-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 12px 15px;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+        }
+
+        input[type="text"]:focus,
+        input[type="url"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1), 0 0 15px rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--accent-button), #333333);
+            border: none;
+            border-radius: 10px;
+            padding: 14px 28px;
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: 'Orbitron', sans-serif;
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(255, 255, 255, 0.2);
+            background: linear-gradient(135deg, #555555, #333333);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            color: var(--text-primary);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: none;
+            margin-bottom: 10px;
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.08));
+            border-color: var(--accent-color);
+        }
+
+        .link-editor {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .link-editor:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .link-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .link-number {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--accent-color);
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .btn-remove {
+            background: rgba(255, 0, 136, 0.2);
+            border: 1px solid rgba(255, 0, 136, 0.5);
+            color: #ff0088;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .btn-remove:hover {
+            background: rgba(255, 0, 136, 0.3);
+            transform: scale(1.05);
+        }
+
+        .link-image {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            object-fit: cover;
+            margin-right: 5px;
+        }
+
+        /* PREVIEW PANEL */
+        .preview-panel {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .preview-container {
+            max-width: 500px;
+            width: 100%;
+            background: #000000;
+            border-radius: 20px;
+            padding: 50px 30px;
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.8),
+                0 0 0 2px rgba(255, 255, 255, 0.2),
+                0 0 30px rgba(255, 255, 255, 0.1);
+            position: relative;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .profile-section {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeInDown 0.8s ease;
+            position: relative;
+            z-index: 2;
+        }
+
+        .avatar-container {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .avatar-container::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: -8px;
+            width: calc(100% + 16px);
+            height: calc(100% + 16px);
+            border-radius: 50%;
+            background: conic-gradient(
+                var(--accent-color),
+                transparent 40%,
+                transparent 60%,
+                var(--accent-color)
+            );
+            animation: rotateGlow 4s linear infinite;
+            z-index: -1;
+        }
+
+        .avatar-container::after {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            width: calc(100% + 10px);
+            height: calc(100% + 10px);
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(74, 158, 255, 0.3), transparent 70%);
+            filter: blur(10px);
+            animation: pulse 3s ease-in-out infinite;
+            z-index: -2;
+        }
+
+        @keyframes rotateGlow {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.1); }
+        }
+
+        .avatar {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            border: 4px solid var(--accent-color);
+            box-shadow: 0 0 20px rgba(74, 158, 255, 0.8), 0 0 40px rgba(74, 158, 255, 0.5);
+            object-fit: cover;
+        }
+
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(74, 158, 255, 0.15);
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid rgba(74, 158, 255, 0.5);
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .status::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(74, 158, 255, 0.3), transparent);
+            animation: statusSweep 3s ease-in-out infinite;
+        }
+
+        @keyframes statusSweep {
+            0% { left: -100%; }
+            50%, 100% { left: 100%; }
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            box-shadow: 0 0 10px var(--accent-color), 0 0 20px var(--accent-color);
+            animation: blink 2s infinite;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .username {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(74, 158, 255, 0.8);
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .bio {
+            color: #b0b8c1;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        .links {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            animation: fadeInUp 0.8s ease;
+            position: relative;
+            z-index: 2;
+        }
+
+        .link-item {
+            background: linear-gradient(135deg, rgba(74, 158, 255, 0.2), rgba(74, 158, 255, 0.1));
+            border: 2px solid rgba(74, 158, 255, 0.5);
+            border-radius: 12px;
+            padding: 18px 25px;
+            text-decoration: none;
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .link-item::before,
+        .link-item::after {
+            content: '';
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            border: 2px solid var(--accent-color);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .link-item::before {
+            top: 5px;
+            left: 5px;
+            border-right: none;
+            border-bottom: none;
+        }
+
+        .link-item::after {
+            bottom: 5px;
+            right: 5px;
+            border-left: none;
+            border-top: none;
+        }
+
+        .link-item:hover::before,
+        .link-item:hover::after {
+            opacity: 1;
+        }
+
+        .link-item:hover::before {
+            top: 3px;
+            left: 3px;
+        }
+
+        .link-item:hover::after {
+            bottom: 3px;
+            right: 3px;
+        }
+
+        .link-item:hover {
+            background: linear-gradient(135deg, rgba(74, 158, 255, 0.3), rgba(74, 158, 255, 0.2));
+            border-color: var(--accent-color);
+            transform: translateY(-3px);
+            box-shadow: 
+                0 6px 25px rgba(74, 158, 255, 0.5),
+                0 0 30px rgba(74, 158, 255, 0.3),
+                inset 0 0 20px rgba(74, 158, 255, 0.1);
+        }
+
+        .link-content {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .link-arrow {
+            color: var(--accent-color);
+            font-size: 1.2rem;
+            text-shadow: 0 0 10px var(--accent-color);
+            animation: arrowBounce 2s ease-in-out infinite;
+        }
+
+        @keyframes arrowBounce {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(5px); }
+        }
+
+        .link-item:hover .link-arrow {
+            animation: arrowBounce 0.6s ease-in-out infinite;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 968px) {
+            .app-container {
+                flex-direction: column;
+            }
+            
+            .editor-panel {
+                width: 100%;
+                border-right: none;
+                border-bottom: 2px solid var(--border-color);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .username { font-size: 2rem; }
+            .link-item { padding: 15px 20px; font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="light-flash"></div>
+    <div class="light-flash"></div>
+    <div class="light-flash"></div>
+    
+    <div class="floating-shapes">
+        <div class="shape circle"></div>
+        <div class="shape square"></div>
+        <div class="shape circle"></div>
+        <div class="shape triangle"></div>
+        <div class="shape square"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <div class="app-container">
+        <div class="editor-panel">
+            <div class="editor-header">
+                <h1 class="editor-title">G-Wht bio</h1>
+                <p class="editor-subtitle">Editor Profissional</p>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">👤 Perfil</h2>
+                
+                <div class="input-group">
+                    <label class="input-label">Foto de Perfil</label>
+                    <input type="file" id="avatarInput" accept="image/*" style="display: none;">
+                    <button class="btn btn-secondary" onclick="document.getElementById('avatarInput').click()">
+                        📁 ESCOLHER FOTO DO PC
+                    </button>
+                    <div id="fileName" style="color: var(--accent-color); font-size: 0.85rem; text-align: center; margin-top: 5px;"></div>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Nome de Usuário</label>
+                    <input type="text" id="usernameInput" placeholder="SEU NOME" value="GHOST_RUNNER">
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Bio</label>
+                    <textarea id="bioInput" placeholder="Descreva você em poucas palavras...">Desenvolvedor | Gamer | Creator 🎮
+Transformando código em arte digital</textarea>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Status</label>
+                    <input type="text" id="statusInput" placeholder="ONLINE" value="ONLINE">
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">🎨 Cores</h2>
+                
+                <div class="input-group">
+                    <label class="input-label">Cor Principal (Auto-detectada)</label>
+                    <div style="display: flex; gap: 12px; align-items: center;">
+                        <div style="width: 60px; height: 40px; border: 2px solid var(--accent-color); border-radius: 8px; background: var(--accent-color);"></div>
+                        <span style="color: var(--accent-color); font-family: monospace; font-weight: 600;" id="primaryColorValue">#4a9eff</span>
+                    </div>
+                    <p style="color: var(--text-secondary); font-size: 0.8rem; margin-top: 8px;">
+                        💡 A cor muda automaticamente baseada na sua foto
+                    </p>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">🔗 Links</h2>
+                <div id="linksContainer"></div>
+                <button class="btn btn-secondary" onclick="addLink()">+ Adicionar Link</button>
+            </div>
+
+            <div class="section">
+                <button class="btn" onclick="saveData()" style="margin-bottom: 10px;">💾 SALVAR ALTERAÇÕES</button>
+                <button class="btn btn-secondary" onclick="viewClientPage()">👁️ VER PÁGINA PÚBLICA</button>
+            </div>
+        </div>
+
+        <div class="preview-panel">
+            <div class="preview-container" id="preview">
+                <div class="profile-section">
+                    <div class="avatar-container">
+                        <img src="https://i.pravatar.cc/300" alt="Avatar" class="avatar" id="previewAvatar">
+                    </div>
+                    <div class="status">
+                        <span class="status-dot"></span>
+                        <span id="previewStatus">ONLINE</span>
+                    </div>
+                    <h1 class="username" id="previewUsername">GHOST_RUNNER</h1>
+                    <p class="bio" id="previewBio">Desenvolvedor | Gamer | Creator 🎮<br>Transformando código em arte digital</p>
+                </div>
+                <div class="links" id="previewLinks"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let links = [
+            { title: '🎮 Twitch', url: 'https://twitch.tv', icon: '🎮' },
+            { title: '📺 YouTube', url: 'https://youtube.com', icon: '📺' },
+            { title: '🐦 Twitter', url: 'https://twitter.com', icon: '🐦' }
+        ];
+
+        let currentAvatarData = 'https://i.pravatar.cc/300';
+        let currentPrimaryColor = '#4a9eff';
+
+        function darkenColor(hex, percent) {
+            hex = hex.replace('#', '');
+            let r = parseInt(hex.substring(0, 2), 16);
+            let g = parseInt(hex.substring(2, 4), 16);
+            let b = parseInt(hex.substring(4, 6), 16);
+            
+            r = Math.floor(r * (1 - percent));
+            g = Math.floor(g * (1 - percent));
+            b = Math.floor(b * (1 - percent));
+            
+            const toHex = (n) => {
+                const hex = n.toString(16);
+                return hex.length === 1 ? '0' + hex : hex;
+            };
+            
+            return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+        }
+
+        function getColorFromImage(imgElement) {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            canvas.width = imgElement.width;
+            canvas.height = imgElement.height;
+            ctx.drawImage(imgElement, 0, 0, imgElement.width, imgElement.height);
+            
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const data = imageData.data;
+            
+            let r = 0, g = 0, b = 0;
+            let count = 0;
+            
+            for (let i = 0; i < data.length; i += 4 * 10) {
+                const red = data[i];
+                const green = data[i + 1];
+                const blue = data[i + 2];
+                
+                const brightness = (red + green + blue) / 3;
+                if (brightness > 30 && brightness < 225) {
+                    r += red;
+                    g += green;
+                    b += blue;
+                    count++;
+                }
+            }
+            
+            r = Math.floor(r / count);
+            g = Math.floor(g / count);
+            b = Math.floor(b / count);
+            
+            const max = Math.max(r, g, b);
+            const min = Math.min(r, g, b);
+            const saturationBoost = 1.5;
+            
+            r = Math.min(255, Math.floor(min + (r - min) * saturationBoost));
+            g = Math.min(255, Math.floor(min + (g - min) * saturationBoost));
+            b = Math.min(255, Math.floor(min + (b - min) * saturationBoost));
+            
+            const toHex = (n) => {
+                const hex = n.toString(16);
+                return hex.length === 1 ? '0' + hex : hex;
+            };
+            
+            return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+        }
+
+        document.getElementById('avatarInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                document.getElementById('fileName').textContent = '✓ ' + file.name;
+                
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    currentAvatarData = event.target.result;
+                    
+                    const tempImg = new Image();
+                    tempImg.onload = function() {
+                        const dominantColor = getColorFromImage(tempImg);
+                        currentPrimaryColor = dominantColor;
+                        updatePreview();
+                    };
+                    tempImg.src = currentAvatarData;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        function updatePreview() {
+            const username = document.getElementById('usernameInput').value;
+            const bio = document.getElementById('bioInput').value;
+            const status = document.getElementById('statusInput').value;
+
+            document.getElementById('previewAvatar').src = currentAvatarData;
+            document.getElementById('previewUsername').textContent = username || 'SEU NOME';
+            document.getElementById('previewBio').innerHTML = bio.replace(/\n/g, '<br>');
+            document.getElementById('previewStatus').textContent = status || 'ONLINE';
+            document.getElementById('primaryColorValue').textContent = currentPrimaryColor;
+
+            document.documentElement.style.setProperty('--accent-color', currentPrimaryColor);
+            
+            const buttonColor = darkenColor(currentPrimaryColor, 0.5);
+            document.documentElement.style.setProperty('--accent-button', buttonColor);
+
+            renderLinks();
+        }
+
+        function renderLinks() {
+            const container = document.getElementById('linksContainer');
+            const preview = document.getElementById('previewLinks');
+            
+            container.innerHTML = '';
+            preview.innerHTML = '';
+
+            links.forEach((link, index) => {
+                const linkEditor = document.createElement('div');
+                linkEditor.className = 'link-editor';
+                
+                // Determinar o que mostrar no campo de ícone (imagem ou emoji)
+                let iconDisplay = link.icon;
+                let imagePreviewHtml = '';
+                
+                if (link.image) {
+                    imagePreviewHtml = `<img src="${link.image}" class="link-image" style="margin-left: 10px; vertical-align: middle;">`;
+                }
+
+                linkEditor.innerHTML = `
+                    <div class="link-header">
+                        <span class="link-number">LINK ${index + 1} ${imagePreviewHtml}</span>
+                        <button class="btn-remove" onclick="removeLink(${index})">✕ Remover</button>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Ícone (Emoji)</label>
+                        <input type="text" value="${link.icon || ''}" onchange="updateLinkIcon(${index}, this.value)" placeholder="🔗">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Título</label>
+                        <input type="text" value="${link.title}" onchange="updateLinkTitle(${index}, this.value)" placeholder="Meu Link">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">URL</label>
+                        <input type="url" value="${link.url}" onchange="updateLinkUrl(${index}, this.value)" placeholder="https://exemplo.com">
+                    </div>
+                `;
+                container.appendChild(linkEditor);
+
+                const linkPreview = document.createElement('a');
+                linkPreview.className = 'link-item';
+                linkPreview.href = link.url;
+                linkPreview.target = '_blank';
+                
+                // Lógica de renderização do ícone/imagem
+                let iconContent = '';
+                if (link.image) {
+                    iconContent = `<img src="${link.image}" class="link-image" alt="icon">`;
+                } else {
+                    iconContent = `<span>${link.icon || ''}</span>`;
+                }
+
+                linkPreview.innerHTML = `
+                    <div class="link-content">
+                        ${iconContent}
+                        <span>${link.title}</span>
+                    </div>
+                    <span class="link-arrow">→</span>
+                `;
+                preview.appendChild(linkPreview);
+            });
+        }
+
+        function addLink() {
+            links.push({ title: 'Novo Link', url: 'https://exemplo.com', icon: '🔗' });
+            renderLinks();
+        }
+
+        function removeLink(index) {
+            links.splice(index, 1);
+            renderLinks();
+        }
+
+        function updateLinkIcon(index, value) {
+            links[index].icon = value;
+            renderLinks();
+        }
+
+        function updateLinkTitle(index, value) {
+            links[index].title = value;
+            renderLinks();
+        }
+
+        async function fetchLinkMetadata(url, index) {
+            if (!url) return;
+            
+            try {
+                const urlObj = new URL(url);
+                let iconFound = false;
+                
+                // 1. Tentar detectar convite do Discord
+                if (urlObj.hostname === 'discord.gg' || urlObj.hostname === 'discord.com' || urlObj.hostname === 'invite.gg') {
+                    // Extrair código do convite
+                    let inviteCode = '';
+                    if (urlObj.pathname.includes('/invite/')) {
+                        inviteCode = urlObj.pathname.split('/invite/')[1];
+                    } else {
+                        inviteCode = urlObj.pathname.substring(1); // remove a primeira barra
+                    }
+                    
+                    if (inviteCode) {
+                        try {
+                            // Usar proxy para contornar CORS e pegar dados do Discord
+                            const apiUrl = `https://discord.com/api/v9/invites/${inviteCode}`;
+                            const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(apiUrl)}`;
+                            
+                            const response = await fetch(proxyUrl);
+                            const data = await response.json();
+                            
+                            if (data.contents) {
+                                const inviteData = JSON.parse(data.contents);
+                                if (inviteData.guild && inviteData.guild.icon) {
+                                    const iconUrl = `https://cdn.discordapp.com/icons/${inviteData.guild.id}/${inviteData.guild.icon}.png`;
+                                    links[index].image = iconUrl;
+                                    links[index].icon = ''; // Remove emoji se achou imagem
+                                    iconFound = true;
+                                }
+                            }
+                        } catch (err) {
+                            console.log('Erro ao buscar dados do Discord:', err);
+                        }
+                    }
+                }
+                
+                // 2. Fallback: Favicon do Google para outros sites (ou se falhar o Discord)
+                if (!iconFound) {
+                    const faviconUrl = `https://www.google.com/s2/favicons?domain=${urlObj.hostname}&sz=128`;
+                    links[index].image = faviconUrl;
+                    links[index].icon = ''; // Remove emoji
+                }
+                
+                renderLinks();
+                
+            } catch (e) {
+                console.error("Erro ao processar URL:", e);
+            }
+        }
+
+        function updateLinkUrl(index, value) {
+            links[index].url = value;
+            renderLinks();
+            
+            // Debounce ou delay pequeno para não chamar a API a cada tecla se o usuário estiver digitando
+            // Mas como é onchange, só chama quando perde o foco ou dá enter
+            if (value && value.startsWith('http')) {
+                fetchLinkMetadata(value, index);
+            }
+        }
+
+        function updateLinkImage(index, value) {
+            links[index].image = value;
+            renderLinks();
+        }
+
+        function saveData() {
+            const data = {
+                avatar: currentAvatarData,
+                username: document.getElementById('usernameInput').value,
+                bio: document.getElementById('bioInput').value,
+                status: document.getElementById('statusInput').value,
+                primaryColor: currentPrimaryColor,
+                links: links
+            };
+            
+            localStorage.setItem('bioData', JSON.stringify(data));
+            
+            const btn = document.querySelector('button[onclick="saveData()"]');
+            const originalText = btn.innerText;
+            btn.innerText = '✅ SALVO!';
+            btn.style.background = '#00cc66';
+            
+            setTimeout(() => {
+                btn.innerText = originalText;
+                btn.style.background = '';
+            }, 2000);
+        }
+
+        function viewClientPage() {
+            saveData(); // Salva antes de abrir
+            window.open('client-view.html', '_blank');
+        }
+
+        // Carregar dados salvos ao iniciar
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedData = localStorage.getItem('bioData');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                
+                if (data.username) document.getElementById('usernameInput').value = data.username;
+                if (data.bio) document.getElementById('bioInput').value = data.bio;
+                if (data.status) document.getElementById('statusInput').value = data.status;
+                if (data.links) links = data.links;
+                
+                if (data.avatar) {
+                    currentAvatarData = data.avatar;
+                    // Tentar extrair cor da imagem salva
+                    const tempImg = new Image();
+                    tempImg.onload = function() {
+                        if (data.primaryColor) {
+                            currentPrimaryColor = data.primaryColor;
+                        } else {
+                            currentPrimaryColor = getColorFromImage(tempImg);
+                        }
+                        updatePreview();
+                    };
+                    tempImg.src = currentAvatarData;
+                } else {
+                    updatePreview();
+                }
+            } else {
+                renderLinks();
+            }
+        });
+
+        document.getElementById('usernameInput').addEventListener('input', updatePreview);
+        document.getElementById('bioInput').addEventListener('input', updatePreview);
+        document.getElementById('statusInput').addEventListener('input', updatePreview);
+
+        renderLinks();
+    </script>
+</body>
+</html>

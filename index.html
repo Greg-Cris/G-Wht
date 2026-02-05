@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GTA Bio Links - Login</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@400;500;600;700&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-primary: #000000;
+            --accent-color: #00f3ff;
+            --accent-button: #00f3ff;
+            --text-primary: #ffffff;
+            --text-secondary: #bbbbbb;
+            --input-bg: #0a0a0a;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* GAMER FX: SCANLINES */
+        .scanlines {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.2));
+            background-size: 100% 4px;
+            z-index: 50;
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        /* GAMER FX: HUD CORNERS */
+        .hud-corner {
+            position: fixed;
+            width: 100px;
+            height: 100px;
+            border: 2px solid var(--accent-color);
+            z-index: 40;
+            pointer-events: none;
+            opacity: 0.7;
+        }
+        
+        .hud-tl { top: 20px; left: 20px; border-right: none; border-bottom: none; }
+        .hud-tr { top: 20px; right: 20px; border-left: none; border-bottom: none; }
+        .hud-bl { bottom: 20px; left: 20px; border-right: none; border-top: none; }
+        .hud-br { bottom: 20px; right: 20px; border-left: none; border-top: none; }
+
+        .hud-text {
+            position: absolute;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.7rem;
+            color: var(--accent-color);
+            padding: 5px;
+        }
+        .hud-tl .hud-text { top: 0; left: 0; }
+        .hud-tr .hud-text { top: 0; right: 0; }
+        .hud-bl .hud-text { bottom: 0; left: 0; }
+        .hud-br .hud-text { bottom: 0; right: 0; }
+
+        /* GAMER FX: PARTICLES & SHAPES */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 30%, var(--accent-color) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, var(--accent-color) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, var(--accent-color) 0%, transparent 50%);
+            animation: particlesFloat 15s ease-in-out infinite;
+            opacity: 0.15;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        @keyframes particlesFloat {
+            0%, 100% { opacity: 0.3; transform: scale(1) rotate(0deg); }
+            50% { opacity: 0.5; transform: scale(1.2) rotate(180deg); }
+        }
+
+        .light-flash {
+            position: fixed;
+            width: 200px; height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--accent-color), transparent 70%);
+            pointer-events: none;
+            z-index: -1;
+            filter: blur(40px);
+            animation: flash 4s ease-in-out infinite;
+        }
+
+        .light-flash:nth-child(1) { top: 10%; left: 5%; animation-delay: 0s; }
+        .light-flash:nth-child(2) { top: 70%; right: 10%; animation-delay: 1.5s; width: 250px; height: 250px; }
+        .light-flash:nth-child(3) { bottom: 20%; left: 30%; animation-delay: 3s; width: 180px; height: 180px; }
+
+        @keyframes flash {
+            0%, 100% { opacity: 0; transform: scale(0.8); }
+            50% { opacity: 0.3; transform: scale(1.2); }
+        }
+
+        .floating-shapes {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .shape {
+            position: absolute;
+            border: 2px solid var(--accent-color);
+            opacity: 0.12;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .shape.circle { border-radius: 50%; box-shadow: 0 0 30px var(--accent-color); }
+        .shape.square { transform: rotate(45deg); box-shadow: 0 0 30px var(--accent-color); }
+        .shape.triangle {
+            width: 0; height: 0;
+            border-left: 40px solid transparent;
+            border-right: 40px solid transparent;
+            border-bottom: 70px solid var(--accent-color);
+            opacity: 0.08;
+            background: none;
+            border-top: none;
+            border: none; /* Reset border for triangle specific */
+            border-left: 40px solid transparent;
+            border-right: 40px solid transparent;
+            border-bottom: 70px solid var(--accent-color);
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px; height: 4px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            opacity: 0.6;
+            box-shadow: 0 0 10px var(--accent-color);
+            animation: particleFloat 8s infinite ease-in-out;
+        }
+
+        .particle:nth-child(6) { top: 15%; left: 25%; animation-delay: 0s; }
+        .particle:nth-child(7) { top: 45%; left: 75%; animation-delay: 1s; }
+        .particle:nth-child(8) { top: 65%; left: 15%; animation-delay: 2s; }
+        .particle:nth-child(9) { top: 85%; left: 85%; animation-delay: 3s; }
+        .particle:nth-child(10) { top: 25%; left: 65%; animation-delay: 1.5s; }
+        .particle:nth-child(11) { top: 55%; left: 35%; animation-delay: 2.5s; }
+
+        @keyframes particleFloat {
+            0%, 100% { transform: translateY(0) translateX(0); opacity: 0.3; }
+            25% { transform: translateY(-20px) translateX(20px); opacity: 0.8; }
+            50% { transform: translateY(-40px) translateX(-10px); opacity: 0.5; }
+            75% { transform: translateY(-20px) translateX(-30px); opacity: 0.7; }
+        }
+
+        .shape:nth-child(1) { width: 80px; height: 80px; top: 10%; left: 10%; animation-delay: 0s; animation-duration: 25s; }
+        .shape:nth-child(2) { width: 120px; height: 120px; top: 60%; left: 80%; animation-delay: -5s; animation-duration: 30s; }
+        .shape:nth-child(3) { width: 60px; height: 60px; top: 80%; left: 15%; animation-delay: -10s; animation-duration: 20s; }
+        .shape:nth-child(4) { top: 30%; left: 85%; animation-delay: -15s; animation-duration: 28s; }
+        .shape:nth-child(5) { width: 100px; height: 100px; top: 50%; left: 50%; animation-delay: -8s; animation-duration: 35s; }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(50px, -50px) rotate(90deg); }
+            50% { transform: translate(-30px, -100px) rotate(180deg); }
+            75% { transform: translate(-50px, 30px) rotate(270deg); }
+        }
+
+        /* GAMER FX: GLITCH LOGO */
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent-color), #888888);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+            position: relative;
+            animation: glitch 3s infinite;
+        }
+
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            2% { transform: translate(-2px, 2px); }
+            4% { transform: translate(2px, -2px); }
+            6% { transform: translate(0); }
+            100% { transform: translate(0); }
+        }
+
+        /* BACKGROUND EFFECTS */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+            opacity: 0.5;
+            z-index: -1;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translateY(0) translateX(0); }
+            100% { transform: translateY(50px) translateX(50px); }
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            padding: 40px;
+            background: rgba(10, 10, 10, 0.9);
+            border: 2px solid var(--accent-color);
+            border-radius: 20px;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.9), 0 0 20px rgba(0, 243, 255, 0.2);
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent-color), #888888);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        .input-label {
+            display: block;
+            color: var(--accent-color);
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px;
+            background: var(--input-bg);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--accent-button), #333333);
+            border: none;
+            border-radius: 10px;
+            padding: 16px;
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: 'Orbitron', sans-serif;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(255, 255, 255, 0.2);
+        }
+
+        .error-msg {
+            color: #ff4a4a;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        /* DECORATIONS */
+        .decoration {
+            position: absolute;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .circle {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--accent-color), transparent 70%);
+            opacity: 0.1;
+            filter: blur(30px);
+        }
+
+        .d1 { top: -50px; left: -50px; }
+        .d2 { bottom: -50px; right: -50px; background: radial-gradient(circle, var(--accent-button), transparent 70%); }
+
+    </style>
+</head>
+<body>
+    <!-- BACKGROUND EFFECTS -->
+    <div class="light-flash"></div>
+    <div class="light-flash"></div>
+    <div class="light-flash"></div>
+    
+    <div class="floating-shapes">
+        <div class="shape circle"></div>
+        <div class="shape square"></div>
+        <div class="shape circle"></div>
+        <div class="shape triangle"></div>
+        <div class="shape square"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <!-- GAMER OVERLAYS -->
+    <div class="scanlines"></div>
+    
+    <div class="hud-corner hud-tl">
+        <div class="hud-text">SYS.INIT.V2</div>
+    </div>
+    <div class="hud-corner hud-tr">
+        <div class="hud-text">CONN: SECURE</div>
+    </div>
+    <div class="hud-corner hud-bl">
+        <div class="hud-text">USER: GUEST</div>
+    </div>
+    <div class="hud-corner hud-br">
+        <div class="hud-text">VER: 2.0.4</div>
+    </div>
+
+    <div class="circle decoration d1"></div>
+    <div class="circle decoration d2"></div>
+
+    <div class="container">
+        <h1 class="logo">G-Wht bio</h1>
+        <p class="subtitle">
+            Sua identidade digital em outro nível.<br>
+            Gerencie seus links com estilo e profissionalismo.
+        </p>
+
+        <div class="auth-box">
+            <!-- LOGIN FORM -->
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="input-group">
+                    <label class="input-label">Nome de Usuário</label>
+                    <input type="text" id="loginUser" placeholder="Seu usuário..." required>
+                </div>
+                <div class="input-group">
+                    <label class="input-label">Senha</label>
+                    <input type="password" id="loginPass" placeholder="Sua senha..." required>
+                </div>
+                
+                <button type="submit" class="btn">ENTRAR</button>
+                <p id="loginError" class="error-msg">Usuário ou senha incorretos.</p>
+            </form>
+
+            <div class="divider">
+                <span>OU</span>
+            </div>
+
+            <button class="btn btn-outline" onclick="showSignup()">CRIAR NOVA CONTA</button>
+        </div>
+    </div>
+
+    <!-- SIGNUP MODAL -->
+    <div id="signupModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeSignup()">&times;</span>
+            <h2 class="modal-title">Crie sua Conta</h2>
+            
+            <form onsubmit="handleSignup(event)">
+                <div class="input-group">
+                    <label class="input-label">Nome de Usuário</label>
+                    <input type="text" id="regUser" placeholder="Escolha um usuário único" required>
+                </div>
+                <div class="input-group">
+                    <label class="input-label">Email</label>
+                    <input type="email" id="regEmail" placeholder="seu@email.com" required>
+                </div>
+                <div class="input-group">
+                    <label class="input-label">Senha</label>
+                    <input type="password" id="regPass" placeholder="Crie uma senha forte" required>
+                </div>
+
+                <button type="submit" class="btn">CADASTRAR E ENTRAR</button>
+            </form>
+        </div>
+    </div>
+
+    <style>
+        /* Adições de estilo para o novo layout */
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--accent-color);
+            color: var(--accent-color);
+            margin-top: 15px;
+        }
+        
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+        }
+
+        .divider {
+            margin: 20px 0;
+            position: relative;
+            text-align: center;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%; left: 0; width: 100%; height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: 0;
+        }
+
+        .divider span {
+            background: #0a0a0a; /* Cor de fundo do container aproximada */
+            padding: 0 10px;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* MODAL STYLES */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(5px);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: #111111;
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid var(--accent-color);
+            width: 90%;
+            max-width: 450px;
+            position: relative;
+            box-shadow: 0 0 50px rgba(255, 255, 255, 0.2);
+            animation: slideUp 0.3s ease;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px; right: 20px;
+            font-size: 2rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close-modal:hover { color: #fff; }
+
+        .modal-title {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--accent-color);
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    </style>
+
+    <script>
+        function handleLogin(e) {
+            e.preventDefault();
+            const user = document.getElementById('loginUser').value;
+            const pass = document.getElementById('loginPass').value;
+            const errorMsg = document.getElementById('loginError');
+
+            // Simulação de login
+            if (user && pass) {
+                // Aqui você pode adicionar lógica real depois
+                localStorage.setItem('currentUser', user); // Salva quem logou
+                window.location.href = 'bio-editor-dark.html';
+            } else {
+                errorMsg.style.display = 'block';
+            }
+        }
+
+        function showSignup() {
+            document.getElementById('signupModal').style.display = 'flex';
+        }
+
+        function closeSignup() {
+            document.getElementById('signupModal').style.display = 'none';
+        }
+
+        function handleSignup(e) {
+            e.preventDefault();
+            const user = document.getElementById('regUser').value;
+            // Simula cadastro e já loga
+            localStorage.setItem('currentUser', user);
+            alert('Conta criada com sucesso! Bem-vindo, ' + user);
+            window.location.href = 'bio-editor-dark.html';
+        }
+
+        // Fechar modal clicando fora
+        window.onclick = function(event) {
+            const modal = document.getElementById('signupModal');
+            if (event.target == modal) {
+                closeSignup();
+            }
+        }
+    </script>
+</body>
+</html>
